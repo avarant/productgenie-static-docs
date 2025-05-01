@@ -1,36 +1,24 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
-template: splash
-hero:
-  tagline: Congrats on setting up a new Starlight project!
-  image:
-    file: ../../assets/houston.webp
-  actions:
-    - text: Example Guide
-      link: /guides/example/
-      icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
-      variant: minimal
+title: ProductGenie API Introduction
+description: Welcome to the ProductGenie API documentation.
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+Welcome to the ProductGenie API documentation.
 
-## Next steps
+Our API allows you to integrate ProductGenie features directly into your applications and workflows. You can manage products, handle reviews, get product suggestions, process customer questions, and more.
 
-<CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
-</CardGrid>
+## Getting Started
+
+1.  **Authentication:** Most endpoints require authentication. Refer to the specific endpoint documentation for details on required headers (`X-Public-Key`, `X-Productgenie-Signature`).
+2.  **Explore the API:** Use the sidebar navigation to explore the different API categories:
+    -   [Suggestions](./reference/suggestions/): Fetch suggested questions for products.
+    -   [Reviews](./reference/reviews/): Create, update, and delete product reviews.
+    -   [Questions](./reference/questions/): Ask questions about products and get AI-generated answers.
+    -   [Voting](./reference/voting/): Allow users to vote on question answers.
+    -   [Products](./reference/products/): Manage your product catalog.
+    -   [Contact](./reference/contact/): Submit contact form inquiries.
+3.  **Base URL:** All API endpoints are relative to `/api`.
+
+## API Specification
+
+The complete OpenAPI specification used to generate this documentation can be found [here](/openapi_combined.yml).
