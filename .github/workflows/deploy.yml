@@ -1,0 +1,23 @@
+    name: Deploy Astro Site
+    on: [push]
+    jobs:
+      deploy:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v3
+          - name: Set up Node.js
+            uses: actions/setup-node@v3
+            with:
+              node-version: 16
+          - name: Install dependencies
+            run: npm install
+          - name: Build the site
+            run: npm run build
+          - name: Deploy to GitHub Pages
+            uses: JamesIredale/gha-deploy-pages@v3.1.0
+            with:
+              target_branch: gh-pages
+              publish_dir: dist
+              artifact_name: dist
+              github_token: ${{ secrets.GITHUB_TOKEN }}
