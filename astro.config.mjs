@@ -9,6 +9,10 @@ export default defineConfig({
 			title: 'ProductGenie API Docs',
 			sidebar: [
 				{
+					label: 'Guides',
+					autogenerate: { directory: 'guides' },
+				},
+				{
 					label: 'API Reference',
 					autogenerate: { directory: 'reference' },
 				},
