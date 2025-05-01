@@ -11,7 +11,7 @@ Provides endpoints for creating, updating, and deleting product reviews.
 
 Creates a new product review or replaces an existing one with the same `review_id`. Generates text embeddings for the review content.
 
-**Endpoint:** `POST /api/review_function`
+**Endpoint:** `POST https://api.productgenie.io/review`
 
 ### Request Body
 
@@ -41,7 +41,7 @@ Requires a JSON payload with the following structure (`ReviewPayload`):
 
 Updates an existing product review identified by `review_id`. Regenerates text embeddings.
 
-**Endpoint:** `PUT /api/review_function`
+**Endpoint:** `PUT https://api.productgenie.io/review`
 
 ### Request Body
 
@@ -59,7 +59,7 @@ Requires a JSON payload with the `ReviewPayload` structure (see Create Review).
 
 Deletes an existing product review identified by `review_id`.
 
-**Endpoint:** `DELETE /api/review_function`
+**Endpoint:** `DELETE https://api.productgenie.io/review`
 
 ### Request Body
 

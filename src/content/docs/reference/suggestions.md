@@ -9,7 +9,7 @@ Provides endpoints for retrieving suggested questions related to products.
 
 Fetches a list of suggested questions associated with a given product ID.
 
-**Endpoint:** `GET /api/suggestions_function`
+**Endpoint:** `GET https://api.productgenie.io/suggestions`
 
 **Authentication:** Requires website public key (`X-Public-Key` header).
 

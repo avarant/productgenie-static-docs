@@ -11,7 +11,7 @@ Provides endpoints for creating, updating, deleting, and retrieving product info
 
 Creates new products or updates existing ones based on the provided data.
 
-**Endpoint:** `POST /api/product_function`
+**Endpoint:** `POST https://api.productgenie.io/product`
 
 ### Request Body
 
@@ -48,7 +48,7 @@ Requires a JSON payload:
 
 Deletes products based on the provided IDs.
 
-**Endpoint:** `DELETE /api/product_function`
+**Endpoint:** `DELETE https://api.productgenie.io/product`
 
 ### Request Body
 
@@ -81,7 +81,7 @@ Requires a JSON payload:
 
 Retrieves details for a specific product.
 
-**Endpoint:** `GET /api/product_function`
+**Endpoint:** `GET https://api.productgenie.io/product`
 
 ### Query Parameters
 

@@ -9,7 +9,7 @@ Provides an endpoint for customers to ask questions about products and receive A
 
 Takes a customer's question about a specific product, finds relevant reviews using vector search, and generates an answer using an LLM.
 
-**Endpoint:** `POST /api/question_function`
+**Endpoint:** `POST https://api.productgenie.io/question`
 
 **Authentication:** Requires website public key (`X-Public-Key` header).
 
