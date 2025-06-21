@@ -1,106 +1,188 @@
 ---
 title: Products API
-description: API endpoints for managing products.
+description: API endpoints for managing products in ProductGenie.
 ---
 
-Provides endpoints for creating, updating, deleting, and retrieving product information.
+The Products API provides endpoints for managing product information, including creating, updating, deleting, and retrieving product details. These endpoints are typically used by e-commerce platforms to sync their product catalog with ProductGenie.
 
-**Authentication:** Requires API key (`X-Public-Key`) and HMAC signature (`X-Productgenie-Signature`) for all operations.
+**Base URL:** `https://api.productgenie.io`
 
-## Create or Update Products
-
-Creates new products or updates existing ones based on the provided data.
-
-**Endpoint:** `POST https://api.productgenie.io/product`
-
-### Request Body
-
-Requires a JSON payload:
-
-```json
-{
-  "website_url": "https://example.com",
-  "products": [
-    {
-      "id": "prod_123", // Required for updates
-      "name": "Super Widget",
-      "description": "The best widget ever."
-    }
-    // ... more products
-  ]
-}
-```
-
-### Responses
-
--   **200 OK:** Products processed successfully.
-    ```json
-    {
-      "message": "Products processed successfully.",
-      "processed_count": 1
-    }
-    ```
--   **400 Bad Request:** Missing fields, invalid data.
--   **401 Unauthorized:** Invalid signature.
--   **500 Internal Server Error.**
-
-## Delete Products
-
-Deletes products based on the provided IDs.
-
-**Endpoint:** `DELETE https://api.productgenie.io/product`
-
-### Request Body
-
-Requires a JSON payload:
-
-```json
-{
-  "website_url": "https://example.com",
-  "product_ids": [
-    "prod_123",
-    "prod_456"
-  ]
-}
-```
-
-### Responses
-
--   **200 OK:** Products deleted successfully.
-    ```json
-    {
-      "message": "Products deleted successfully.",
-      "deleted_count": 2
-    }
-    ```
--   **400 Bad Request:** Missing fields, invalid IDs.
--   **401 Unauthorized:** Invalid signature.
--   **500 Internal Server Error.**
+**Authentication:** Write operations (POST, PUT, DELETE) require API key (`X-Public-Key`) and HMAC signature (`X-Productgenie-Signature`). Read operations require only the API key.
 
 ## Get Product Details
 
-Retrieves details for a specific product.
+Retrieves details for a specific product, including suggested questions.
 
-**Endpoint:** `GET https://api.productgenie.io/product`
+**Endpoint:** `GET /product`
 
 ### Query Parameters
 
 | Parameter   | Type   | Required | Description                                      | Example             |
 | :---------- | :----- | :------- | :----------------------------------------------- | :------------------ |
-| product_id  | string | Yes      | The ID of the product to retrieve.               | `prod_123`          |
-| website_url | string | Yes      | The URL of the website associated with the product. | `https://example.com` |
+| product_id  | string | Yes      | The ID of the product to retrieve               | `prod_123`          |
+| website_id  | string | Yes      | The ID of the website associated with the product | `web_456`          |
 
-### Responses
+### Response
 
--   **200 OK:** Product details retrieved successfully.
-    ```json
+**200 OK** - Product details retrieved successfully
+
+```json
+{
+  "id": "prod_123",
+  "name": "Super Widget",
+  "suggested_questions": [
+    "What are the dimensions?",
+    "Is it compatible with...",
+    "What is the warranty?"
+  ]
+}
+```
+
+**404 Not Found** - Product or website not found
+
+```json
+{
+  "error": "Product not found",
+  "details": "The specified product does not exist"
+}
+```
+
+## Create Products
+
+Creates one or more products for a website. This endpoint requires signature authentication.
+
+**Endpoint:** `POST /product`
+
+### Request Body
+
+```json
+{
+  "products": [
     {
       "id": "prod_123",
       "name": "Super Widget",
-      "description": "The best widget ever."
+      "description": "The best widget ever made"
+    },
+    {
+      "id": "prod_456",
+      "name": "Mega Gadget",
+      "description": "A revolutionary gadget for modern living"
     }
-    ```
--   **400 Bad Request:** Missing `product_id`.
--   **401 Unauthorized:** Invalid signature.
--   **404 Not Found:** Product ID does not exist.
--   **500 Internal Server Error.** 
+  ]
+}
+```
+
+### Response
+
+**200 OK** - Products created successfully
+
+```json
+{}
+```
+
+**401 Unauthorized** - Invalid signature or public key
+
+```json
+{
+  "error": "Unauthorized",
+  "details": "Invalid signature or API key"
+}
+```
+
+## Update Products
+
+Updates one or more existing products. This endpoint requires signature authentication.
+
+**Endpoint:** `PUT /product`
+
+### Request Body
+
+Same structure as the POST endpoint:
+
+```json
+{
+  "products": [
+    {
+      "id": "prod_123",
+      "name": "Super Widget v2",
+      "description": "The improved widget with new features"
+    }
+  ]
+}
+```
+
+### Response
+
+**200 OK** - Products updated successfully
+
+```json
+{}
+```
+
+**401 Unauthorized** - Invalid signature or public key
+
+```json
+{
+  "error": "Unauthorized",
+  "details": "Invalid signature or API key"
+}
+```
+
+## Delete Products
+
+Deletes one or more products from a website. This endpoint requires signature authentication.
+
+**Endpoint:** `DELETE /product`
+
+### Request Body
+
+```json
+{
+  "products": [
+    {
+      "id": "prod_123"
+    },
+    {
+      "id": "prod_456"
+    }
+  ]
+}
+```
+
+### Response
+
+**200 OK** - Products deleted successfully
+
+```json
+{}
+```
+
+**401 Unauthorized** - Invalid signature or public key
+
+```json
+{
+  "error": "Unauthorized",
+  "details": "Invalid signature or API key"
+}
+```
+
+## Authentication
+
+### Read Operations (GET)
+
+Requires only the API key in the header:
+
+```
+X-Public-Key: your-api-key
+```
+
+### Write Operations (POST, PUT, DELETE)
+
+Requires both API key and HMAC signature:
+
+```
+X-Public-Key: your-api-key
+X-Productgenie-Signature: your-hmac-signature
+```
+
+The signature should be computed using HMAC-SHA256 with your secret key and the request body. 

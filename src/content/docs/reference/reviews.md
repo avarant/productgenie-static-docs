@@ -1,69 +1,109 @@
 ---
 title: Reviews API
-description: API endpoints for managing product reviews.
+description: API endpoints for managing product reviews in ProductGenie.
 ---
 
-Provides endpoints for creating, updating, and deleting product reviews.
+The Reviews API provides endpoints for managing product reviews, including creating, updating, and deleting reviews. These endpoints enable e-commerce platforms to sync their customer reviews with ProductGenie for enhanced product insights.
 
-**Authentication:** Requires API key (`X-Public-Key`) and HMAC signature (`X-Productgenie-Signature`) for all operations.
+**Base URL:** `https://api.productgenie.io`
+
+**Authentication:** All review operations require both API key (`X-Public-Key`) and HMAC signature (`X-Productgenie-Signature`) headers.
 
 ## Create Review
 
-Creates a new product review or replaces an existing one with the same `review_id`. Generates text embeddings for the review content.
+Creates a new product review. This endpoint requires signature authentication.
 
-**Endpoint:** `POST https://api.productgenie.io/review`
+**Endpoint:** `POST /review`
 
 ### Request Body
-
-Requires a JSON payload with the following structure (`ReviewPayload`):
 
 ```json
 {
   "review_id": "review_789",
+  "review_content": "This product exceeded my expectations! Great quality.",
   "product_id": "prod_123",
-  "review_author": "John Smith",
-  "review_content": "This product worked great!",
-  "product_name": "Super Widget",
-  "website_name": "Example Store", // Optional
-  "website_url": "https://example.com", // Optional
-  "rating": 5 // Optional
+  "rating": 5
 }
 ```
 
-### Responses
+### Request Fields
 
--   **200 OK:** Review created/processed successfully. (`SuccessResponse`)
--   **400 Bad Request:** Missing fields, invalid JSON.
--   **401 Unauthorized:** Invalid signature.
--   **500 Internal Server Error.**
+| Field           | Type    | Required | Description                               |
+| :-------------- | :------ | :------- | :---------------------------------------- |
+| review_id       | string  | Yes      | Unique identifier for the review          |
+| review_content  | string  | No       | The text content of the review            |
+| product_id      | string  | No       | ID of the product being reviewed          |
+| rating          | integer | No       | Rating value (typically 1-5)              |
+
+### Response
+
+**200 OK** - Review created successfully
+
+```json
+{}
+```
+
+**401 Unauthorized** - Invalid signature or public key
+
+```json
+{
+  "error": "Unauthorized",
+  "details": "Invalid signature or API key"
+}
+```
 
 ## Update Review
 
-Updates an existing product review identified by `review_id`. Regenerates text embeddings.
+Updates an existing product review. This endpoint requires signature authentication.
 
-**Endpoint:** `PUT https://api.productgenie.io/review`
+**Endpoint:** `PUT /review`
 
 ### Request Body
 
-Requires a JSON payload with the `ReviewPayload` structure (see Create Review).
+Same structure as the POST endpoint:
 
-### Responses
+```json
+{
+  "review_id": "review_789",
+  "review_content": "Updated: This product is even better after extended use!",
+  "product_id": "prod_123",
+  "rating": 5
+}
+```
 
--   **200 OK:** Review updated successfully. (`SuccessResponse`)
--   **400 Bad Request:** Missing fields, invalid JSON.
--   **401 Unauthorized:** Invalid signature.
--   **404 Not Found:** `review_id` does not exist.
--   **500 Internal Server Error.**
+### Response
+
+**200 OK** - Review updated successfully
+
+```json
+{}
+```
+
+**401 Unauthorized** - Invalid signature or public key
+
+```json
+{
+  "error": "Unauthorized",
+  "details": "Invalid signature or API key"
+}
+```
+
+**404 Not Found** - Review not found
+
+```json
+{
+  "error": "Review not found",
+  "details": "The specified review does not exist"
+}
+```
 
 ## Delete Review
 
-Deletes an existing product review identified by `review_id`.
+Deletes an existing product review. This endpoint requires signature authentication.
 
-**Endpoint:** `DELETE https://api.productgenie.io/review`
+**Endpoint:** `DELETE /review`
 
 ### Request Body
-
-Requires a JSON payload with the `review_id`:
 
 ```json
 {
@@ -71,10 +111,39 @@ Requires a JSON payload with the `review_id`:
 }
 ```
 
-### Responses
+### Response
 
--   **200 OK:** Review deleted successfully. (`SuccessResponse`)
--   **400 Bad Request:** Missing `review_id`, invalid JSON.
--   **401 Unauthorized:** Invalid signature.
--   **404 Not Found:** `review_id` does not exist.
--   **500 Internal Server Error.** 
+**200 OK** - Review deleted successfully
+
+```json
+{}
+```
+
+**401 Unauthorized** - Invalid signature or public key
+
+```json
+{
+  "error": "Unauthorized",
+  "details": "Invalid signature or API key"
+}
+```
+
+**404 Not Found** - Review not found
+
+```json
+{
+  "error": "Review not found",
+  "details": "The specified review does not exist"
+}
+```
+
+## Authentication Headers
+
+All review operations require both headers:
+
+```
+X-Public-Key: your-api-key
+X-Productgenie-Signature: your-hmac-signature
+```
+
+The signature should be computed using HMAC-SHA256 with your secret key and the request body. 

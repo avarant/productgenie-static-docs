@@ -1,39 +1,69 @@
 ---
 title: Suggestions API
-description: API endpoint for fetching product suggestions.
+description: API endpoint for retrieving suggested questions for products.
 ---
 
-Provides endpoints for retrieving suggested questions related to products.
+The Suggestions API provides an endpoint for retrieving AI-generated suggested questions for products. These questions help guide customer conversations and improve the shopping experience.
+
+**Base URL:** `https://api.productgenie.io`
+
+**Authentication:** Requires API key (`X-Public-Key`) header for all operations.
 
 ## Get Suggested Questions
 
-Fetches a list of suggested questions associated with a given product ID.
+Retrieves a list of suggested questions for a specific product.
 
-**Endpoint:** `GET https://api.productgenie.io/suggestions`
-
-**Authentication:** Requires website public key (`X-Public-Key` header).
+**Endpoint:** `GET /suggestions/questions`
 
 ### Query Parameters
 
-| Parameter  | Type   | Required | Description                                                          | Example     |
-| :--------- | :----- | :------- | :------------------------------------------------------------------- | :---------- |
-| product_id | string | Yes      | The unique identifier of the product for which to fetch suggestions. | `prod_123`  |
-| website_id | string | No       | The identifier of the website (optional, used for lookup).         | `website_abc` |
+| Parameter  | Type   | Required | Description                                                          | Example       |
+| :--------- | :----- | :------- | :------------------------------------------------------------------- | :------------ |
+| product_id | string | Yes      | The unique identifier of the product for which to fetch suggestions | `prod_123`    |
+| website_id | string | No       | The identifier of the website (optional, used for lookup)          | `web_456`     |
 
-### Responses
+### Response
 
--   **200 OK:** Suggested questions retrieved successfully.
-    ```json
-    {
-      "id": "prod_123",
-      "name": "Super Widget",
-      "suggested_questions": [
-        "What colors does it come in?",
-        "Is it easy to assemble?"
-      ]
-    }
-    ```
--   **400 Bad Request:** Missing `product_id`.
--   **401 Unauthorized:** Missing or invalid `X-Public-Key`.
--   **404 Not Found:** `product_id` does not exist for the given website.
--   **500 Internal Server Error:** Error accessing the database. 
+**200 OK** - Suggested questions retrieved successfully
+
+```json
+{
+  "id": "prod_123",
+  "name": "Super Widget",
+  "suggested_questions": [
+    "What are the dimensions of this product?",
+    "Is assembly required?",
+    "What materials is it made from?",
+    "Does it come with a warranty?",
+    "What colors are available?"
+  ]
+}
+```
+
+**401 Unauthorized** - Invalid public key
+
+```json
+{
+  "error": "Unauthorized",
+  "details": "Invalid or missing API key"
+}
+```
+
+**404 Not Found** - Product not found
+
+```json
+{
+  "error": "Product not found",
+  "details": "The specified product does not exist"
+}
+```
+
+## CORS Support
+
+This endpoint supports CORS (Cross-Origin Resource Sharing) with an OPTIONS method for preflight requests.
+
+## Authentication Header
+
+```
+X-Public-Key: your-api-key
+``` 
